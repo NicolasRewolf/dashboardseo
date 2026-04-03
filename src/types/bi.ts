@@ -2,8 +2,6 @@
  * Business Intelligence metrics — derived from normalized GSC data + domain rules.
  */
 
-import type { LegalSpecialtyId } from './specialties'
-
 /** User-facing filter: all queries vs brand-stripped “market” view. */
 export type BrandFilterMode = 'all' | 'brand' | 'non_brand'
 
@@ -18,8 +16,34 @@ export interface DashboardDateRange {
 export interface DashboardFilters {
   dateRange: DashboardDateRange
   brandMode: BrandFilterMode
-  /** `null` = all specialties. */
-  specialtyId: LegalSpecialtyId | null
+}
+
+export interface DailyTrendPoint {
+  date: string
+  clicks: number
+  impressions: number
+  position: number
+}
+
+export interface QueryMover {
+  query: string
+  clicksCur: number
+  clicksPrev: number
+  delta: number
+  deltaPct: number
+}
+
+export interface CannibalizationRow {
+  query: string
+  pageCount: number
+  impressions: number
+  pages: string[]
+}
+
+export interface QueryScatterPoint {
+  position: number
+  impressions: number
+  query: string
 }
 
 /** Single keyword (or query/page pair) with BI annotations. */
@@ -54,21 +78,6 @@ export interface StrikingDistanceMatrix {
     maxPosition: number
     minImpressions: number
   }
-}
-
-/** Organic value by legal pillar (semantic grouping, not raw URL list). */
-export interface SemanticPillarSnapshot {
-  specialtyId: LegalSpecialtyId
-  clicks: number
-  impressions: number
-  weightedPosition: number
-  /** Share of site organic clicks in window. */
-  clickShare: number
-}
-
-export interface SemanticPillarPerformance {
-  pillars: SemanticPillarSnapshot[]
-  totalClicks: number
 }
 
 /** Page-level decay signal vs site benchmark. */
@@ -110,7 +119,13 @@ export interface BiDashboardSnapshot {
   filters: DashboardFilters
   northStar: ExecutiveNorthStar
   strikingDistance: StrikingDistanceMatrix
-  pillarPerformance: SemanticPillarPerformance
   decay: OrganicHealthDecayMonitor
   intentVolume: BusinessIntentVolume
+  dailyCurrent: DailyTrendPoint[]
+  dailyPrevious: DailyTrendPoint[]
+  trendChart: Record<string, unknown>[]
+  topGains: QueryMover[]
+  topLosses: QueryMover[]
+  cannibalization: CannibalizationRow[]
+  scatterQueryPoints: QueryScatterPoint[]
 }

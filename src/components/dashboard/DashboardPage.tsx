@@ -2,7 +2,7 @@ import { LayoutGroup, motion } from 'framer-motion'
 
 import { useGscDashboardData } from '@/hooks/use-gsc-dashboard-data'
 import { GscAuthProvider, useGscAuth } from '@/contexts/gsc-auth-context'
-import { DashboardFiltersProvider, useDashboardFilters } from '@/contexts/dashboard-filters'
+import { DashboardFiltersProvider } from '@/contexts/dashboard-filters'
 
 import { ExecutiveSummary } from './ExecutiveSummary'
 import { FilterBar } from './FilterBar'
@@ -10,7 +10,6 @@ import { GscConnectionBar } from './GscConnectionBar'
 import { StrategicModuleGrid } from './StrategicModuleGrid'
 
 function DashboardBody() {
-  const { specialtyId } = useDashboardFilters()
   const { isAuthenticated, siteUrl } = useGscAuth()
   const { loading, error, snapshot, northStar, rowCount } = useGscDashboardData(
     isAuthenticated ? siteUrl : null
@@ -52,12 +51,10 @@ function DashboardBody() {
 
         <motion.section
           layout
-          key={specialtyId ?? 'all'}
           className="space-y-4"
           transition={{ type: 'spring', stiffness: 320, damping: 30 }}
         >
           <StrategicModuleGrid
-            specialtyId={specialtyId}
             snapshot={snapshot}
             loading={loading}
             error={error}

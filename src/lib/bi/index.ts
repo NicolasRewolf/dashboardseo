@@ -1,5 +1,6 @@
 export * from './brand-filter'
 export * from './calculations'
+export * from './extended-metrics'
 export * from './gsc-normalize'
 export * from './intent'
 export * from './labels'

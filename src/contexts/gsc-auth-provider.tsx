@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -18,6 +16,8 @@ import {
 import { getGscClientId } from '@/lib/gsc/oauth'
 import { listSites, type GscSiteEntry } from '@/lib/gsc/api'
 import { loadStoredTokens } from '@/lib/gsc/token-storage'
+
+import { GscAuthContext, type GscAuthContextValue, type GscAuthStatus } from '@/contexts/gsc-auth-context-base'
 
 /** Dev Strict Mode runs the OAuth callback effect twice; avoid clearing URL / status too early. */
 let gscOAuthExchangeInFlight = false
@@ -56,23 +56,6 @@ function pickSiteUrl(list: GscSiteEntry[]): string | null {
     null
   )
 }
-
-type GscAuthStatus = 'idle' | 'ready' | 'connecting' | 'error'
-
-interface GscAuthContextValue {
-  status: GscAuthStatus
-  error: string | null
-  hasClientId: boolean
-  isAuthenticated: boolean
-  sites: GscSiteEntry[]
-  siteUrl: string | null
-  setSiteUrl: (url: string | null) => void
-  connect: () => Promise<void>
-  disconnect: () => void
-  refreshSites: () => Promise<void>
-}
-
-const GscAuthContext = createContext<GscAuthContextValue | null>(null)
 
 export function GscAuthProvider({ children }: { children: ReactNode }) {
   const hasClientId = Boolean(getGscClientId())
@@ -184,10 +167,4 @@ export function GscAuthProvider({ children }: { children: ReactNode }) {
   )
 
   return <GscAuthContext.Provider value={value}>{children}</GscAuthContext.Provider>
-}
-
-export function useGscAuth(): GscAuthContextValue {
-  const ctx = useContext(GscAuthContext)
-  if (!ctx) throw new Error('useGscAuth must be used within GscAuthProvider')
-  return ctx
 }

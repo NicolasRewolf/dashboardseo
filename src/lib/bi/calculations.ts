@@ -4,16 +4,12 @@ import type {
   ContentDecayAlert,
   ExecutiveNorthStar,
   OrganicHealthDecayMonitor,
-  SemanticPillarPerformance,
-  SemanticPillarSnapshot,
   StrikingDistanceKeyword,
   StrikingDistanceMatrix,
 } from '@/types/bi'
 import type { GscNormalizedRow } from '@/types/gsc'
-import type { LegalSpecialtyId } from '@/types/specialties'
 import { isBrandQuery } from '@/lib/bi/brand-filter'
 import { inferSearchIntent, transactionalWeight } from '@/lib/bi/intent'
-import { resolveSpecialtyFromPage } from '@/lib/bi/resolve-specialty'
 
 const STRIKING_MIN_POS = 4
 const STRIKING_MAX_POS = 12
@@ -89,14 +85,6 @@ export function filterRowsByBrandMode(
   })
 }
 
-export function filterRowsBySpecialty(
-  rows: GscNormalizedRow[],
-  specialtyId: LegalSpecialtyId | null
-): GscNormalizedRow[] {
-  if (!specialtyId) return rows
-  return rows.filter((r) => resolveSpecialtyFromPage(r.page ?? '') === specialtyId)
-}
-
 export function aggregateImpressionsByPage(rows: GscNormalizedRow[]): Map<string, number> {
   const m = new Map<string, number>()
   for (const r of rows) {
@@ -114,40 +102,6 @@ export function totalMapValues(m: Map<string, number>): number {
   let s = 0
   for (const v of m.values()) s += v
   return s
-}
-
-export function buildSemanticPillarPerformance(
-  rows: GscNormalizedRow[]
-): SemanticPillarPerformance {
-  const byPillar = new Map<
-    LegalSpecialtyId,
-    { clicks: number; impressions: number; posWeight: number }
-  >()
-
-  let totalClicks = 0
-
-  for (const r of rows) {
-    const page = r.page ?? ''
-    const sid = resolveSpecialtyFromPage(page)
-    const cur = byPillar.get(sid) ?? { clicks: 0, impressions: 0, posWeight: 0 }
-    cur.clicks += r.clicks
-    cur.impressions += r.impressions
-    cur.posWeight += r.position * r.impressions
-    byPillar.set(sid, cur)
-    totalClicks += r.clicks
-  }
-
-  const pillars: SemanticPillarSnapshot[] = [...byPillar.entries()].map(([specialtyId, v]) => ({
-    specialtyId,
-    clicks: v.clicks,
-    impressions: v.impressions,
-    weightedPosition: v.impressions > 0 ? v.posWeight / v.impressions : 0,
-    clickShare: totalClicks > 0 ? v.clicks / totalClicks : 0,
-  }))
-
-  pillars.sort((a, b) => b.clicks - a.clicks)
-
-  return { pillars, totalClicks }
 }
 
 export function buildDecayMonitor(

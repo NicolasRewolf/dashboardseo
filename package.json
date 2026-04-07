@@ -1,5 +1,5 @@
 {
-  "name": "rewolf-starter",
+  "name": "dashboardseo",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -8,6 +8,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "lint:complexity": "eslint . --rule 'complexity: [warn, 10]' --rule 'max-depth: [warn, 5]'",
+    "knip": "knip",
+    "check": "npm run lint && npm run build && npm run knip",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -62,6 +65,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "knip": "^6.3.0",
     "tailwindcss": "^4.0.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",

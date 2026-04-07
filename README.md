@@ -1,21 +1,31 @@
-# REWOLF Starter
+# dashboardseo
 
-Boîte à outils **UI + dataviz** — page blanche.  
-**Vite · React 19 · TypeScript · Tailwind v4 · shadcn/ui · Recharts · Nivo · Tremor · Visx · Plotly · Observable Plot · Framer Motion · react-spring · Geist**
+Application **dashboard SEO / BI** : connexion **Google Search Console**, filtres, tendances, modules analytiques (gains/pertes, striking distance, etc.) et enrichissements **DataForSEO** (volumes, opportunités, graphiques avancés).  
+Produit présenté dans l’UI comme **« Search Console 2.0 » / Pilotage organique**.
 
-Aucune démo, aucune donnée d’exemple dans le dépôt : tu composes tes dashboards ici.
+**Dépôt :** [github.com/NicolasRewolf/dashboardseo](https://github.com/NicolasRewolf/dashboardseo)
+
+> Ce dépôt **n’est pas** [rewolf-seo-editor](https://github.com/NicolasRewolf/rewolf-seo-editor) (éditeur d’articles). Les deux se complètent mais vivent dans **deux clones séparés**.
+
+## Stack (résumé)
+
+Vite, React 19, TypeScript, Tailwind, shadcn/ui, Nivo / Recharts / Tremor / etc.
+
+## Commandes
 
 ```bash
-git clone https://github.com/NicolasRewolf/rewolf-starter.git
-cd rewolf-starter
+git clone https://github.com/NicolasRewolf/dashboardseo.git
+cd dashboardseo
 npm install
 npm run dev
 ```
 
-Composants shadcn optionnels : `bash scripts/setup.sh`
+Configurer les variables d’environnement (voir `.env.example`) : GSC / proxy, DataForSEO, etc. selon ce que tu utilises.
 
-**Design system** : `src/styles/globals.css` · **Wrappers graphiques** : `src/components/charts/` · **Thème Nivo** : `src/lib/nivo-theme.ts` · **Helpers nombres** : `src/lib/format.ts`
+## Nom du package npm
 
----
+Le champ `"name"` dans `package.json` est **`dashboardseo`** (plus le vieux nom de template `rewolf-starter`).
 
-*REWOLF Studio — Bordeaux*
+## Voir aussi
+
+- [rewolf-seo-editor — docs/ECOSYSTEM.md](https://github.com/NicolasRewolf/rewolf-seo-editor/blob/main/docs/ECOSYSTEM.md) (tableau des dépôts REWOLF et pièges à éviter)

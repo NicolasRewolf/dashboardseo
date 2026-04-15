@@ -22,10 +22,24 @@ export function formatCompact(value: number): string {
   return numeral(value).format('0.[0]a').toUpperCase()
 }
 
+/**
+ * Valeur déjà exprimée en **pourcent sur 100** (ex. `3,25` pour 3,25 %).
+ * Ne pas passer un ratio 0–1 ici — utiliser {@link formatRatioAsPercent}.
+ */
 export function formatPercent(value: number, decimals = 1): string {
   return numeral(value).format(`0.[${'0'.repeat(decimals)}]`) + '%'
 }
 
+/**
+ * Ratio **0–1** (ex. CTR GSC, part d’un tout) → affichage avec le symbole %.
+ */
+export function formatRatioAsPercent(ratio: number, decimals = 2): string {
+  return formatPercent(ratio * 100, decimals)
+}
+
+/**
+ * Points de pourcentage ou variation en % sur 100, avec signe (+ / −).
+ */
 export function formatPercentSigned(value: number, decimals = 1): string {
   const formatted = numeral(Math.abs(value)).format(`0.${'0'.repeat(decimals)}`)
   return `${value >= 0 ? '+' : '-'}${formatted}%`

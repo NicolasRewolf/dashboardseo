@@ -4,16 +4,25 @@ import { useGscDashboardData } from '@/hooks/use-gsc-dashboard-data'
 import { GscAuthProvider, useGscAuth } from '@/contexts/gsc-auth-context'
 import { DashboardFiltersProvider } from '@/contexts/dashboard-filters'
 
+import { DataForSeoInsightCards } from './DataForSeoInsightCards'
 import { ExecutiveSummary } from './ExecutiveSummary'
 import { FilterBar } from './FilterBar'
 import { GscConnectionBar } from './GscConnectionBar'
+import { TooltipProvider } from '@/components/ui/tooltip'
+
 import { StrategicModuleGrid } from './StrategicModuleGrid'
 
 function DashboardBody() {
   const { isAuthenticated, siteUrl } = useGscAuth()
-  const { loading, error, snapshot, northStar, rowCount } = useGscDashboardData(
-    isAuthenticated ? siteUrl : null
-  )
+  const {
+    loading,
+    error,
+    snapshot,
+    northStar,
+    rowCount,
+    refreshDataForSeo,
+    dataForSeoRefreshing,
+  } = useGscDashboardData(isAuthenticated ? siteUrl : null)
 
   const connected = isAuthenticated
   const hasSite = Boolean(siteUrl)
@@ -45,9 +54,9 @@ function DashboardBody() {
           </div>
         </header>
 
-        <ExecutiveSummary northStar={northStar} loading={loading && connected && hasSite} />
-
         <FilterBar />
+
+        <ExecutiveSummary northStar={northStar} loading={loading && connected && hasSite} />
 
         <motion.section
           layout
@@ -63,6 +72,22 @@ function DashboardBody() {
             rowCount={rowCount}
           />
         </motion.section>
+
+        {snapshot ? (
+          <div className="border-t border-border/70 pt-6">
+            <DataForSeoInsightCards
+              block={snapshot.dataForSeo}
+              onRefreshDataForSeo={refreshDataForSeo}
+              dataForSeoRefreshing={dataForSeoRefreshing}
+              refreshDisabled={loading || !connected || !hasSite}
+              dailyTrend={snapshot.dailyCurrent}
+              dateRange={snapshot.filters.dateRange}
+              pageSegment={snapshot.filters.pageSegment}
+              siteUrl={siteUrl}
+              queryPickerOptions={snapshot.dataForSeo.positionVolumeScatter.map((p) => p.query)}
+            />
+          </div>
+        ) : null}
       </motion.div>
     </LayoutGroup>
   )
@@ -72,7 +97,9 @@ export function DashboardPage() {
   return (
     <GscAuthProvider>
       <DashboardFiltersProvider>
-        <DashboardBody />
+        <TooltipProvider delayDuration={350} skipDelayDuration={200}>
+          <DashboardBody />
+        </TooltipProvider>
       </DashboardFiltersProvider>
     </GscAuthProvider>
   )

@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react'
 
-import type { BrandFilterMode, DashboardDateRange } from '@/types/bi'
+import type { BrandFilterMode, DashboardDateRange, PageSegmentMode } from '@/types/bi'
 
 import {
   DashboardFiltersContext,
@@ -14,16 +14,19 @@ function defaultDateRange(): DashboardDateRange {
 
 export function DashboardFiltersProvider({ children }: { children: ReactNode }) {
   const [dateRange, setDateRange] = useState<DashboardDateRange>(defaultDateRange)
-  const [brandMode, setBrandMode] = useState<BrandFilterMode>('non_brand')
+  const [brandMode, setBrandMode] = useState<BrandFilterMode>('all')
+  const [pageSegment, setPageSegment] = useState<PageSegmentMode>('all')
 
   const value = useMemo(
     (): DashboardFiltersContextValue => ({
       dateRange,
       brandMode,
+      pageSegment,
       setDateRange,
       setBrandMode,
+      setPageSegment,
     }),
-    [dateRange, brandMode]
+    [dateRange, brandMode, pageSegment]
   )
 
   return (

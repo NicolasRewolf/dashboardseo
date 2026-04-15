@@ -40,11 +40,20 @@ function encodeSitePath(siteUrl: string): string {
   return encodeURIComponent(siteUrl)
 }
 
+/** Plafond GSC Search Analytics par requête (lignes renvoyées). */
+export const GSC_SEARCH_ANALYTICS_ROW_LIMIT = 25_000
+
+export interface GscSearchAnalyticsResult {
+  rows: GscSearchAnalyticsRow[]
+  /** Présent si Google a agrégé différemment (ex. `byProperty`). */
+  responseAggregationType?: string
+}
+
 export async function searchAnalyticsQuery(
   accessToken: string,
   siteUrl: string,
   body: GscQueryRequestBody
-): Promise<GscSearchAnalyticsRow[]> {
+): Promise<GscSearchAnalyticsResult> {
   const path = `${getGscApiBase()}/sites/${encodeSitePath(siteUrl)}/searchAnalytics/query`
   const res = await fetch(path, {
     method: 'POST',
@@ -59,5 +68,8 @@ export async function searchAnalyticsQuery(
     throw new Error(`searchAnalytics ${res.status}: ${t}`)
   }
   const json = (await res.json()) as GscSearchAnalyticsResponse
-  return json.rows ?? []
+  return {
+    rows: json.rows ?? [],
+    responseAggregationType: json.responseAggregationType,
+  }
 }

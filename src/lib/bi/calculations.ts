@@ -98,6 +98,10 @@ export function sumClicks(rows: GscNormalizedRow[]): number {
   return rows.reduce((s, r) => s + r.clicks, 0)
 }
 
+export function sumImpressions(rows: GscNormalizedRow[]): number {
+  return rows.reduce((s, r) => s + r.impressions, 0)
+}
+
 export function totalMapValues(m: Map<string, number>): number {
   let s = 0
   for (const v of m.values()) s += v
@@ -174,7 +178,6 @@ export function buildBusinessIntentVolume(rows: GscNormalizedRow[]): BusinessInt
  */
 export function buildExecutiveNorthStar(partial?: Partial<ExecutiveNorthStar>): ExecutiveNorthStar {
   return {
-    estimatedMarketShare: partial?.estimatedMarketShare ?? null,
     organicGrowthVelocity: partial?.organicGrowthVelocity ?? null,
     highIntentLeadProxy: partial?.highIntentLeadProxy ?? null,
   }

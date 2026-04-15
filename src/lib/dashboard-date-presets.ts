@@ -30,6 +30,11 @@ export function getRollingDaysRange(days: number, now: Date = new Date()): Dashb
   }
 }
 
+/** Les 30 derniers jours calendaires (aujourd’hui inclus). */
+export function getLast30DaysRange(now: Date = new Date()): DashboardDateRange {
+  return getRollingDaysRange(30, now)
+}
+
 export function rangesEqual(a: DashboardDateRange, b: DashboardDateRange): boolean {
   return a.start === b.start && a.end === b.end
 }
@@ -46,4 +51,11 @@ export function isCurrentYearRange(
   now: Date = new Date()
 ): boolean {
   return rangesEqual(range, getCurrentYearRange(now))
+}
+
+export function isLast30DaysRange(
+  range: DashboardDateRange,
+  now: Date = new Date()
+): boolean {
+  return rangesEqual(range, getLast30DaysRange(now))
 }
